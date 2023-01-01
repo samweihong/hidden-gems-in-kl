@@ -1,9 +1,11 @@
 import { Layer, Stage } from "react-konva";
 import { useEffect, useState } from "react";
 import Sprite from "./sprite";
+import { Joystick } from "react-joystick-component";
+import { Html } from "react-konva-utils";
 
-const dx = 3;
-const dy = 3;
+const dx = 2;
+const dy = 2;
 
 export default function Canvas({ containerWidth, containerHeight }) {
   // handle responsive scene
@@ -22,8 +24,8 @@ export default function Canvas({ containerWidth, containerHeight }) {
   character.src = "/images/dio.jpg";
   character.alt = "character";
   const [position, setPosition] = useState({
-    x: (containerWidth - character.width) / 2,
-    y: (containerHeight - character.height) / 2,
+    x: (sceneDimensions.width - character.width) / 2,
+    y: (sceneDimensions.height - character.height) / 2,
   });
 
   // handle player movement
@@ -43,7 +45,6 @@ export default function Canvas({ containerWidth, containerHeight }) {
         case "a":
         case "ArrowLeft":
           setKeys((keys) => ({ ...keys, a: { ...keys.a, pressed: true } }));
-          //
           break;
         case "s":
         case "ArrowDown":
@@ -76,6 +77,7 @@ export default function Canvas({ containerWidth, containerHeight }) {
           break;
       }
     }
+
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
     return () => {
@@ -100,6 +102,48 @@ export default function Canvas({ containerWidth, containerHeight }) {
     };
   }, [keys]);
 
+  function handleJoystickMove(e) {
+    switch (e.direction) {
+      case "FORWARD":
+        setKeys((keys) => ({
+          ...keys,
+          w: { ...keys.w, pressed: true },
+          s: { ...keys.s, pressed: false },
+        }));
+        break;
+      case "LEFT":
+        setKeys((keys) => ({
+          ...keys,
+          a: { ...keys.a, pressed: true },
+          d: { ...keys.d, pressed: false },
+        }));
+        break;
+      case "BACKWARD":
+        setKeys((keys) => ({
+          ...keys,
+          s: { ...keys.s, pressed: true },
+          w: { ...keys.w, pressed: false },
+        }));
+        break;
+      case "RIGHT":
+        setKeys((keys) => ({
+          ...keys,
+          d: { ...keys.d, pressed: true },
+          a: { ...keys.a, pressed: false },
+        }));
+        break;
+    }
+  }
+
+  function handleJoystickStop() {
+    setKeys({
+      w: { pressed: false },
+      a: { pressed: false },
+      s: { pressed: false },
+      d: { pressed: false },
+    });
+  }
+
   return (
     <Stage
       width={sceneDimensions.width * scale}
@@ -109,6 +153,11 @@ export default function Canvas({ containerWidth, containerHeight }) {
     >
       <Layer>
         <Sprite image={character} position={position} />
+        <Html divProps={{ style: { position: "relative" } }}>
+          <div className="absolute left-5 bottom-5">
+            <Joystick move={handleJoystickMove} stop={handleJoystickStop} />
+          </div>
+        </Html>
       </Layer>
     </Stage>
   );

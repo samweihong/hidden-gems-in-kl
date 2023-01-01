@@ -17,8 +17,8 @@ export default function CharacterMovement() {
   useEffect(() => {
     const handleResize = () => {
       setDimensions({
-        width: ref.current.offsetWidth,
-        height: ref.current.offsetHeight,
+        width: ref.current.offsetWidth - 50,
+        height: ref.current.offsetHeight - 50,
       });
     };
     if (!initialDimensionsAreSet) {
