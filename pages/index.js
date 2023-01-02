@@ -55,6 +55,11 @@ export default function Home() {
             Rumah Tangsi
           </p>
         </Link>
+        <Link href="/test/character-movement">
+          <p className="m-5 font-medium text-blue-600 hover:underline dark:text-blue-500">
+            Character Movement
+          </p>
+        </Link>
       </div>
     </>
   );
