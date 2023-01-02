@@ -1,31 +1,30 @@
 import { Layer, Stage } from "react-konva";
 import { useEffect, useState } from "react";
-import Sprite from "./sprite";
+import Sprite from "../game/sprite";
 import { Joystick } from "react-joystick-component";
 import { Html } from "react-konva-utils";
+import Boundary from "../game/boundary";
+import { BOUNDARIES } from "../../constants/boundaries";
+import { SCENE } from "../../constants/scene";
 
 const dx = 2;
 const dy = 2;
 
 export default function Canvas({ containerWidth, containerHeight }) {
   // handle responsive scene
-  const sceneDimensions = {
-    width: 1024,
-    height: 576,
-  };
   const scale = Math.min(
-    containerWidth / sceneDimensions.width,
-    containerHeight / sceneDimensions.height
+    containerWidth / SCENE.width,
+    containerHeight / SCENE.height
   );
 
   // handle image properties
-  const size = 0.15 * Math.min(sceneDimensions.width, sceneDimensions.height);
+  const size = 100;
   const character = new window.Image(size, size);
   character.src = "/images/dio.jpg";
   character.alt = "character";
   const [position, setPosition] = useState({
-    x: (sceneDimensions.width - character.width) / 2,
-    y: (sceneDimensions.height - character.height) / 2,
+    x: (SCENE.width - character.width) / 2,
+    y: (SCENE.height - character.height) / 2,
   });
 
   // handle player movement
@@ -146,13 +145,23 @@ export default function Canvas({ containerWidth, containerHeight }) {
 
   return (
     <Stage
-      width={sceneDimensions.width * scale}
-      height={sceneDimensions.height * scale}
+      width={SCENE.width * scale}
+      height={SCENE.height * scale}
       scale={{ x: scale, y: scale }}
       className="bg-amber-400"
     >
       <Layer>
         <Sprite image={character} position={position} />
+        {BOUNDARIES["character-movement"].map(
+          ({ position, width, height }, i) => (
+            <Boundary
+              key={i}
+              position={position}
+              width={width}
+              height={height}
+            />
+          )
+        )}
         <Html divProps={{ style: { position: "relative" } }}>
           <div className="absolute left-5 bottom-5">
             <Joystick move={handleJoystickMove} stop={handleJoystickStop} />
