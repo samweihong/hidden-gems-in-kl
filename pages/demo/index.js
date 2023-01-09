@@ -1,4 +1,4 @@
-import MainHead from "../components/head/main-head";
+import MainHead from "../../components/head/main-head";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
 
