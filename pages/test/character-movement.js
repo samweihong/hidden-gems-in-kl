@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 
-const Canvas = dynamic(() => import("/components/game/canvas"), {
+const Canvas = dynamic(() => import("/components/game/game-canvas"), {
   ssr: false,
 });
 

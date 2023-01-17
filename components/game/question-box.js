@@ -5,15 +5,20 @@ export default function QuestionBox({
   answers: [a1, a2, a3],
   correctAnswer,
   onComplete,
+  score,
+  setScore,
 }) {
   const [message, setMessage] = useState("");
 
   function handleClick(answer) {
     return () => {
       if (message) return;
-      if (answer === correctAnswer) setMessage("Correct!");
-      else setMessage("Wrong answer. The answer should be " + correctAnswer);
-      setTimeout(onComplete, 2500);
+      if (answer === correctAnswer) {
+        setMessage("Correct! Current score: " + (score + 1));
+        setScore((score) => score + 1);
+      } else
+        setMessage("Wrong answer. The answer should be " + correctAnswer + ".");
+      setTimeout(onComplete, 1500);
     };
   }
 

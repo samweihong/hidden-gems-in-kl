@@ -22,7 +22,14 @@ const CHARACTER = new window.Image(60, 60);
 CHARACTER.src = "/images/dio.jpg";
 CHARACTER.alt = "character";
 
-export default function Canvas({ containerWidth, containerHeight }) {
+export default function GameCanvas({
+  containerWidth,
+  containerHeight,
+  level,
+  setLevel,
+  score,
+  setScore,
+}) {
   // handle responsive scene
   const scale = Math.min(
     containerWidth / SCENE.width,
@@ -30,8 +37,7 @@ export default function Canvas({ containerWidth, containerHeight }) {
   );
 
   // handle level change
-  const [level, setLevel] = useState(0);
-  const [nextLevel, setNextLevel] = useState(1);
+  const [nextLevel, setNextLevel] = useState(level + 1);
   const [allDoors, setAllDoors] = useState(RT_DOORS);
   const [info, setInfo] = useState([]);
   const [showQuestionBox, setShowQuestionBox] = useState(false);
@@ -208,6 +214,7 @@ export default function Canvas({ containerWidth, containerHeight }) {
 
   // handle collision between player and infos
   useEffect(() => {
+    if (infos.length === 0) return;
     const id = setInterval(() => {
       for (const info of infos)
         if (rectangularCollision(CHARACTER, info) && keys.r.pressed) {
@@ -242,14 +249,16 @@ export default function Canvas({ containerWidth, containerHeight }) {
                   y: RT_PLAYER_POSITIONS[nextLevel].y,
                 });
               }}
+              score={score}
+              setScore={setScore}
             />
           </Html>
         )}
         <Sprite image={BACKGROUND} position={{ x: 0, y: 0 }} />
         <Sprite image={CHARACTER} position={position} />
-        {boundaries.map(({ position, width, height }, i) => (
-          <Boundary key={i} position={position} width={width} height={height} />
-        ))}
+        {/*{boundaries.map(({ position, width, height }, i) => (*/}
+        {/*  <Boundary key={i} position={position} width={width} height={height} />*/}
+        {/*))}*/}
         {doors.map(({ position, width, height }, i) => (
           <Door key={i} position={position} width={width} height={height} />
         ))}
